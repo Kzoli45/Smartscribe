@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
-use App\Models\FormField;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Models\FormField;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class FormController extends Controller
 {
@@ -26,7 +27,7 @@ class FormController extends Controller
              'title' => $request->input('title'),
              'description' => $request->input('description'),
              'color' => $request->input('color'),
-             'password' => $request->input('isPublic') ? hash('sha256', $request->input('password')) : null,
+             'password' => $request->input('isPublic') ? Hash::make($request->input('password')) : null,
              'is_public' => $request->input('isPublic') ? false : true,
              'tags' => $request->input('tags', []) ? json_encode($request->input('tags')) : null,
              'field_count' => count($request->input('fields', [])),

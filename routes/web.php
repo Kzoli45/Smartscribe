@@ -20,6 +20,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/explore', [ExploreController::class, 'show'])->name('explore.show');
     Route::get('/explore/forms/{form}', [ExploreController::class, 'showForm'])->name('explore.form.show');
+    Route::post('/explore/forms/{form}/check', [ExploreController::class, 'checkForm'])->name('explore.form.check');
 });
 
 require __DIR__.'/settings.php';

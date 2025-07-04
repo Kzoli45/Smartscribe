@@ -65,10 +65,6 @@
                             <h1 class="mb-2">Form Title</h1>
                             <Input v-model="form.title" />
                         </div>
-                        <div class="flex flex-col gap-2">
-                            <h1 class="mb-2">Form Color</h1>
-                            <Input type="color" v-model="form.color" class="w-24" />
-                        </div>
                     </div>
                     <div class="flex gap-4">
                         <div class="flex flex-col gap-2 min-w-32">

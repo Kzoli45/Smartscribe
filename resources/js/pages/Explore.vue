@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import Sidebar from '@/components/Sidebar.vue';
+    import InputError from '@/components/InputError.vue';
     import FormQuizCard from '@/components/FormQuizCard.vue';
     import { Lock } from 'lucide-vue-next';
     import { Link, useForm } from '@inertiajs/vue3';
@@ -23,7 +24,7 @@
         }
     });
 
-    const form = useForm({
+    const passwordForm = useForm({
         password: ''
     });
 
@@ -63,32 +64,31 @@
                                     <template #responses>{{ form.submission_count }}</template>
                                 </FormQuizCard>
                             </DialogTrigger>
-                            <DialogContent class="sm:max-w-[425px]">
-                            <DialogHeader>
-                                <DialogTitle>Enter Password</DialogTitle>
-                                <DialogDescription>
-                                    To access this form, please enter the password.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div class="grid gap-4 py-4">
-                                <div class="grid grid-cols-4 items-center gap-4">
-                                <Label for="password" class="text-right">
-                                    Password
-                                </Label>
-                                <Input id="password" type="password" class="col-span-3" />
+                                <DialogContent class="sm:max-w-[425px]">
+                            <form @submit.prevent="passwordForm.post(route('explore.form.check', form.id)), {
+                                    onFinish: () => passwordForm.reset('password')}">
+                                <DialogHeader>
+                                    <DialogTitle class="mb-2">Enter Password</DialogTitle>
+                                    <DialogDescription class="mb-4">
+                                        To access this form, please enter the password.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div class="grid gap-4 py-4">
+                                    <div class="grid grid-cols-4 items-center gap-4">
+                                    <Label for="password" class="text-right">
+                                        Password
+                                    </Label>
+                                    <Input id="password" type="password" class="col-span-3" required v-model="passwordForm.password"/>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-sm text-red-500 mt-2">
-                                        Password is incorrect. Please try again.
-                                    </p>
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button type="submit">
-                                    Submit
-                                </Button>
-                            </DialogFooter>
-                            </DialogContent>
+                                <InputError :message="passwordForm.errors.password" />
+                                <DialogFooter>
+                                    <Button type="submit" :disabled="passwordForm.processing">
+                                        Submit
+                                    </Button>
+                                </DialogFooter>
+                                </form>
+                                </DialogContent>
                         </Dialog>
                     </template>
                 </template>

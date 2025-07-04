@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
-use App\Models\FormField;
 use App\Models\User;
+use App\Models\FormField;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ExploreController extends Controller
 {
@@ -32,4 +33,17 @@ class ExploreController extends Controller
                     ->get()
             ]);
     }
+
+    public function checkForm(Request $request, Form $form)
+        {
+            $request->validate([
+                'password' => 'required|string',
+            ]);
+
+            if (!Hash::check($request->input('password'), $form->password)) {
+                return redirect()->back()->withErrors(['password' => 'Incorrect password']);
+            }
+
+            return redirect()->route('explore.form.show', $form->id);
+        }
 }
