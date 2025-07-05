@@ -28,6 +28,30 @@ export const createNewField = (id: number) => {
     };
 }
 
+export const createNameField = (id: number) => {
+    return {
+        id: id,
+        fieldType: 'text',
+        fieldName: 'Name',
+        fieldDescription: 'Enter your name',
+        isRequired: true,
+        options: [],
+        file: null,
+    };
+}
+
+export const createEmailField = (id: number) => {
+    return {
+        id: id,
+        fieldType: 'email',
+        fieldName: 'Email',
+        fieldDescription: 'Enter your email',
+        isRequired: true,
+        options: [],
+        file: null,
+    };
+}
+
 export const validateForm = (form: any) => {
     const errors: string[] = [];
 

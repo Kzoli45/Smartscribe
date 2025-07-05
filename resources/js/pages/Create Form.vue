@@ -1,9 +1,10 @@
 <script setup lang="ts">
     import Sidebar from '@/components/Sidebar.vue';
-    import { createNewForm, createNewField, validateForm } from '@/composables/createNewForm';
+    import { createNewForm, createNewField, validateForm, createNameField, createEmailField } from '@/composables/createNewForm';
     import { Eye } from 'lucide-vue-next';
     import draggable from 'vuedraggable'
     import { ref, watch, onMounted } from 'vue';
+    import { Badge } from '@/components/ui/badge';
     import axios from 'axios';
     import { Input } from '@/components/ui/input';
     import { Checkbox } from '@/components/ui/checkbox';
@@ -20,6 +21,26 @@
     const togglePasswordVisibility = () => {
         showPassword.value = !showPassword.value;
     };
+
+    const addNameField = () => {
+    const existingIndex = form.value.fields.findIndex(f => f.fieldName.toLowerCase() === 'name');
+    if (existingIndex === -1) {
+        form.value.fields.splice(0, 0, createNameField(generateFieldId()));
+    }
+    };
+
+    const addEmailField = () => {
+        const existingIndex = form.value.fields.findIndex(f => f.fieldName.toLowerCase() === 'email');
+        if (existingIndex === -1) {
+            const nameIndex = form.value.fields.findIndex(f => f.fieldName.toLowerCase() === 'name');
+            const insertIndex = nameIndex === -1 ? 0 : 1;
+            form.value.fields.splice(insertIndex, 0, createEmailField(generateFieldId()));
+        }
+    };
+
+    const generateFieldId = () => {
+        return form.value.fields.reduce((maxId, f) => Math.max(maxId, f.id), 0) + 1;
+};
 
     watch(form, (newForm) => {
         localStorage.setItem('form', JSON.stringify(newForm));
@@ -109,9 +130,15 @@
                         </div>
                 </div>
                 <div class="flex flex-col gap-2">
-                    <div class="flex gap-2 mb-4">
-                        <h1>Fields</h1>
-                        <Plus class="cursor-pointer size-6" @click="form.fields.push(createNewField(form.fields.length + 1))" />
+                    <div class="flex justify-between gap-2 mb-4">
+                        <div class="flex items-center gap-2">
+                            <h1>Fields</h1>
+                            <Plus class="cursor-pointer size-6" @click="form.fields.push(createNewField(form.fields.length + 1))" />
+                        </div>
+                        <div class="flex gap-2">
+                            <Badge variant="outline" class="cursor-pointer" @click="addNameField">Add Name Field</Badge>
+                            <Badge variant="outline" class="cursor-pointer" @click="addEmailField">Add Email Field</Badge>
+                        </div>
                     </div>
                     <draggable v-model="form.fields" item-key="id" handle=".drag-handle" class="flex flex-col gap-2" :animation="200" :group="{ name: 'fields', pull: true, put: true }">
                         <template #item="{ element: field, index }">
@@ -156,7 +183,6 @@
                                                                     <SelectItem value="multiselect">Multiple Select</SelectItem>
                                                                     <SelectItem value="phone">Phone</SelectItem>
                                                                     <SelectItem value="checkbox">Checkbox</SelectItem>
-                                                                    <SelectItem value="image">Image</SelectItem>
                                                                 </SelectGroup>
                                                             </SelectContent>
                                                         </Select>

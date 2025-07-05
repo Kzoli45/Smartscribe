@@ -4,17 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Submission extends Model
+class FormSubmission extends Model
 {
     protected $fillable = [
-        'quiz_id',
+        'form_id',
         'user_id',
-        'score',
+        'content',
     ];
 
     public function form()
     {
-        return $this->belongsTo(Quiz::class, 'form_id');
+        return $this->belongsTo(Form::class, 'form_id');
     }
 
     public function user()
